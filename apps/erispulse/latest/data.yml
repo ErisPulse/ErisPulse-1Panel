@@ -51,5 +51,7 @@ additionalProperties:
         zh-Hant: Dashboard 登入令牌
         ja: ダッシュボードログイントークン
         ko: 대시보드 로그인 토큰
-      required: false
+      random: true
+      required: true
+      rule: paramComplexity
       type: password

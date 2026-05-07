@@ -1,37 +1,37 @@
 # ErisPulse
 
-事件驱动的多平台机器人开发框架
+Event-driven multi-platform bot development framework
 
-## 简介
+## Description
 
-ErisPulse 是一个基于 Python 的事件驱动型多平台机器人开发框架。通过统一的 OneBot12 标准接口，您可以一次编写代码，同时在云湖、Telegram、OneBot 等多个平台部署相同功能的机器人。
+ErisPulse is an event-driven multi-platform bot development framework based on Python. Through the unified OneBot12 standard interface, you can write code once and deploy bots on multiple platforms such as Yunhu, Telegram, OneBot, etc.
 
-## 核心特性
+## Features
 
-- **事件驱动架构** - 基于 OneBot12 标准的清晰事件模型
-- **跨平台兼容** - 插件模块编写一次即可在所有平台使用
-- **模块化设计** - 灵活的插件系统，易于扩展和集成
-- **热重载支持** - 开发时无需重启即可重新加载代码
-- **完整工具链** - 提供 CLI 工具、包管理和自动化脚本
+- **Event-Driven Architecture** - Clear event model based on OneBot12 standard
+- **Cross-Platform** - Write modules once, run on all platforms
+- **Modular Design** - Flexible plugin system, easy to extend
+- **Hot Reload** - Reload code without restarting
+- **Complete Toolchain** - CLI tools, package manager, and automation scripts
 
-## 配置说明
+## Configuration
 
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| 端口 | Dashboard Web 端口 | 8000 |
-| 数据路径 | 配置文件存储路径 | ./data |
-| 时区 | 容器时区 | Asia/Shanghai |
-| Dashboard 令牌 | Dashboard 管理面板登录密码 | （空） |
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| Port | Dashboard web port | 8000 |
+| Data Path | Config file storage path | ./data |
+| Timezone | Container timezone | Asia/Shanghai |
+| Dashboard Token | Dashboard login password (required) | - |
 
-## 使用说明
+## Usage
 
-1. 安装后访问 `http://<IP>:<端口>/Dashboard`
-2. 使用设置的 Dashboard 令牌登录管理面板
-3. 在管理面板中配置适配器和插件
+1. After installation, visit `http://<IP>:<Port>/Dashboard` in your browser
+2. Log in with the Dashboard token you configured
+3. Configure adapters and plugins in the Dashboard
 
-## 链接
+## Links
 
-- 官网: https://www.erisdev.com
+- Website: https://www.erisdev.com
 - GitHub: https://github.com/ErisPulse/ErisPulse
 - Docker Hub: https://hub.docker.com/r/erispulse/erispulse
-- 文档: https://github.com/ErisPulse/ErisPulse
+- Docs: https://github.com/ErisPulse/ErisPulse
