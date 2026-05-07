@@ -1,0 +1,94 @@
+name: Sync PyPI Version
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      include_prerelease:
+        description: "Include pre-release versions"
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install packaging
+        run: pip install packaging
+
+      - name: Get PyPI versions
+        id: pypi
+        run: |
+          INCLUDE_PRE="${{ github.event.inputs.include_prerelease || 'true' }}"
+
+          LATEST_STABLE=$(curl -sL https://pypi.org/pypi/ErisPulse/json | python3 -c 'import json,sys;from packaging.version import Version;d=json.load(sys.stdin);r=[v for v in d["releases"].keys()];s=[v for v in r if not Version(v).is_prerelease];print(sorted(s,key=Version)[-1] if s else "")')
+
+          if [ "$INCLUDE_PRE" = "true" ]; then
+            TARGET_VERSION=$(curl -sL https://pypi.org/pypi/ErisPulse/json | python3 -c 'import json,sys;from packaging.version import Version;d=json.load(sys.stdin);r=list(d["releases"].keys());print(sorted(r,key=Version)[-1])')
+          else
+            TARGET_VERSION="$LATEST_STABLE"
+          fi
+
+          echo "version=$TARGET_VERSION" >> $GITHUB_OUTPUT
+          echo "stable=$LATEST_STABLE" >> $GITHUB_OUTPUT
+          echo "Target version: $TARGET_VERSION (stable: $LATEST_STABLE)"
+
+      - name: Check if version directory exists
+        id: check
+        run: |
+          if [ -d "apps/erispulse/${{ steps.pypi.outputs.version }}" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Version ${{ steps.pypi.outputs.version }} already exists, skipping"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create new version directory
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.pypi.outputs.version }}"
+          mkdir -p "apps/erispulse/$VERSION"
+          cp apps/erispulse/latest/docker-compose.yml "apps/erispulse/$VERSION/"
+          cp apps/erispulse/latest/data.yml "apps/erispulse/$VERSION/"
+          sed -i "s|erispulse/erispulse:latest|erispulse/erispulse:$VERSION|g" "apps/erispulse/$VERSION/docker-compose.yml"
+          echo "Created apps/erispulse/$VERSION/"
+
+      - name: Update stable version directory
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          STABLE="${{ steps.pypi.outputs.stable }}"
+          if [ -n "$STABLE" ] && [ "$STABLE" != "${{ steps.pypi.outputs.version }}" ]; then
+            if [ ! -d "apps/erispulse/$STABLE" ]; then
+              mkdir -p "apps/erispulse/$STABLE"
+              cp apps/erispulse/latest/docker-compose.yml "apps/erispulse/$STABLE/"
+              cp apps/erispulse/latest/data.yml "apps/erispulse/$STABLE/"
+              sed -i "s|erispulse/erispulse:latest|erispulse/erispulse:$STABLE|g" "apps/erispulse/$STABLE/docker-compose.yml"
+              echo "Also created stable version apps/erispulse/$STABLE/"
+            fi
+          fi
+
+      - name: Configure git
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.pypi.outputs.version }}"
+          git add "apps/erispulse/"
+          git commit -m "Add ErisPulse $VERSION"
+          git push
