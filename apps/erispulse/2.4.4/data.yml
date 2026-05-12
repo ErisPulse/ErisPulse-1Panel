@@ -69,13 +69,9 @@ additionalProperties:
       required: true
       type: select
       values:
-        - label:
-            en: Stable
-            zh: 稳定版
+        - label: 稳定版 (Stable)
           value: "stable"
-        - label:
-            en: Development (pre-release)
-            zh: 开发版（预发布）
+        - label: 开发版 (Dev)
           value: "dev"
     - default: "false"
       edit: true
@@ -91,11 +87,7 @@ additionalProperties:
       required: true
       type: select
       values:
-        - label:
-            en: Disabled
-            zh: 关闭
+        - label: 关闭 (Disabled)
           value: "false"
-        - label:
-            en: Enabled
-            zh: 开启
+        - label: 开启 (Enabled)
           value: "true"
