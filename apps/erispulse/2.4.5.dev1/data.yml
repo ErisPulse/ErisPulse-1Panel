@@ -55,3 +55,47 @@ additionalProperties:
       required: true
       rule: paramComplexity
       type: password
+    - default: "stable"
+      edit: true
+      envKey: ERISPULSE_CHANNEL_SELECT
+      labelEn: Update Channel
+      labelZh: 更新频道
+      label:
+        en: Update Channel
+        zh: 更新频道
+        zh-Hant: 更新頻道
+        ja: アップデートチャンネル
+        ko: 업데이트 채널
+      required: true
+      type: select
+      values:
+        - label:
+            en: Stable
+            zh: 稳定版
+          value: "stable"
+        - label:
+            en: Development (pre-release)
+            zh: 开发版（预发布）
+          value: "dev"
+    - default: "false"
+      edit: true
+      envKey: ERISPULSE_UPDATE_ON_START
+      labelEn: Auto Update on Start
+      labelZh: 启动时自动更新
+      label:
+        en: Auto Update on Start
+        zh: 启动时自动更新
+        zh-Hant: 啟動時自動更新
+        ja: 起動時自動更新
+        ko: 시작 시 자동 업데이트
+      required: true
+      type: select
+      values:
+        - label:
+            en: Disabled
+            zh: 关闭
+          value: "false"
+        - label:
+            en: Enabled
+            zh: 开启
+          value: "true"
