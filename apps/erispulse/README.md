@@ -22,6 +22,8 @@ ErisPulse is an event-driven multi-platform bot development framework based on P
 | Data Path | Config file storage path | ./data |
 | Timezone | Container timezone | Asia/Shanghai |
 | Dashboard Token | Dashboard login password (required) | - |
+| Update Channel | Choose stable or dev (pre-release) channel | stable |
+| Auto Update on Start | Auto-update ErisPulse on container start | Disabled |
 
 ## Usage
 
