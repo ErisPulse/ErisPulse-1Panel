@@ -62,7 +62,7 @@ jobs:
           mkdir -p "apps/erispulse/$VERSION"
           cp apps/erispulse/latest/docker-compose.yml "apps/erispulse/$VERSION/"
           cp apps/erispulse/latest/data.yml "apps/erispulse/$VERSION/"
-          sed -i "s|\${ERISPULSE_CHANNEL:-latest}|$VERSION|g" "apps/erispulse/$VERSION/docker-compose.yml"
+          sed -i "s|erispulse/erispulse:latest|erispulse/erispulse:$VERSION|g" "apps/erispulse/$VERSION/docker-compose.yml"
           echo "Created apps/erispulse/$VERSION/"
 
       - name: Update stable version directory
@@ -74,7 +74,7 @@ jobs:
               mkdir -p "apps/erispulse/$STABLE"
               cp apps/erispulse/latest/docker-compose.yml "apps/erispulse/$STABLE/"
               cp apps/erispulse/latest/data.yml "apps/erispulse/$STABLE/"
-              sed -i "s|\${ERISPULSE_CHANNEL:-latest}|$STABLE|g" "apps/erispulse/$STABLE/docker-compose.yml"
+              sed -i "s|erispulse/erispulse:latest|erispulse/erispulse:$STABLE|g" "apps/erispulse/$STABLE/docker-compose.yml"
               echo "Also created stable version apps/erispulse/$STABLE/"
             fi
           fi

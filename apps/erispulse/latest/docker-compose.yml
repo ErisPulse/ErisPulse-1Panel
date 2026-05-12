@@ -1,6 +1,6 @@
 services:
   erispulse:
-    image: "erispulse/erispulse:${ERISPULSE_CHANNEL:-latest}"
+    image: erispulse/erispulse:latest
     container_name: ${CONTAINER_NAME}
     restart: unless-stopped
     networks:
