@@ -2,6 +2,8 @@
 
 # ErisPulse 1Panel App Store
 
+![alt text](.github/1panel_image.png)
+
 [English](#english) | [简体中文](#简体中文)
 
 </div>
