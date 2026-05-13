@@ -1,322 +1,565 @@
 const GITHUB_RAW = "https://raw.githubusercontent.com/ErisPulse/ErisPulse-1Panel/main";
 
+// 多语言配置
+const I18N = {
+  en: {
+    title: "ErisPulse · 1Panel App Store",
+    desc: "Event-driven multi-platform bot development framework",
+    badges: ["Docker", "amd64 / arm64", "1Panel 1.x / 2.0+"],
+    quickInstall: "Quick Install",
+    installLabel: "1Panel Scheduled Task / Terminal",
+    copyBtn: "Copy",
+    copiedBtn: "Copied!",
+    orWith: "Or with wget:",
+    stepsTitle: "Setup Steps",
+    steps: [
+      "Copy the install command above",
+      "Run it via 1Panel Scheduled Task (Shell script), or SSH into your server and execute directly",
+      "Go to 1Panel App Store, click \"Update App List\" to refresh local apps",
+      "Find ErisPulse, click Install and configure the port and Dashboard token",
+      "Visit <code>http://&lt;IP&gt;:&lt;port&gt;/Dashboard</code> and log in with your token"
+    ],
+    uninstallTitle: "Uninstall",
+    linksTitle: "Resources",
+    links: {
+      github: "GitHub",
+      docker: "Docker Hub",
+      website: "Website",
+      repo: "This Repo",
+      panel: "1Panel Official"
+    },
+    footer: "&copy; ErisDev · Powered by ErisPulse"
+  },
+  zh: {
+    title: "ErisPulse · 1Panel 应用商店",
+    desc: "事件驱动的多平台机器人开发框架",
+    badges: ["Docker", "amd64 / arm64", "1Panel 1.x / 2.0+"],
+    quickInstall: "快速安装",
+    installLabel: "1Panel 计划任务 / 终端",
+    copyBtn: "复制",
+    copiedBtn: "已复制!",
+    orWith: "或使用 wget:",
+    stepsTitle: "安装步骤",
+    steps: [
+      "复制上方的安装命令",
+      "通过 1Panel 计划任务 (Shell 脚本) 运行，或 SSH 登录服务器直接执行",
+      "进入 1Panel 应用商店，点击 \"更新应用列表\" 刷新本地应用",
+      "找到 ErisPulse，点击安装并配置端口和 Dashboard 令牌",
+      "访问 <code>http://&lt;IP&gt;:&lt;port&gt;/Dashboard</code> 并使用令牌登录"
+    ],
+    uninstallTitle: "卸载",
+    linksTitle: "相关链接",
+    links: {
+      github: "GitHub",
+      docker: "Docker Hub",
+      website: "官方网站",
+      repo: "本项目仓库",
+      panel: "1Panel 官网"
+    },
+    footer: "&copy; ErisDev · 由 ErisPulse 驱动"
+  }
+};
+
 async function fetchScript(name) {
   const resp = await fetch(`${GITHUB_RAW}/scripts/${name}`);
   if (!resp.ok) return null;
   return resp.text();
 }
 
-function renderHTML(request) {
+function getLang(request, url) {
+  const param = url.searchParams.get("lang");
+  if (param === "zh" || param === "en") return param;
+  const acceptLang = request.headers.get("Accept-Language") || "";
+  return acceptLang.toLowerCase().includes("zh") ? "zh" : "en";
+}
+
+function renderHTML(request, url) {
   const host = request.headers.get("Host") || "get-1panel.erisdev.com";
   const baseUrl = `https://${host}`;
+  const lang = getLang(request, url);
+  const t = I18N[lang];
+  const isZh = lang === "zh";
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ErisPulse · 1Panel App Store</title>
+<title>${t.title}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-p: #1a1a1a;
-    --bg-s: #252525;
-    --bg-t: #2d2d2d;
-    --tx-p: #E0E0E0;
-    --tx-s: #A0A0A0;
-    --tx-t: #707070;
-    --bd: #404040;
-    --bd-h: #505050;
-    --accent: #5a5a3a;
-    --accent-h: #4a4a2a;
-    --accent-fg: #D4D4AA;
-    --sh: rgba(0,0,0,.3);
-    --ok-bg: #1B5E20; --ok-c: #A5D6A7; --ok-bd: #2E7D32;
-    --er-bg: #B71C1C; --er-c: #FFCDD2; --er-bd: #C62828;
-    --link: #64B5F6;
+    --bg-body: #0f1115;
+    --bg-card: rgba(30, 34, 45, 0.6);
+    --bg-card-hover: rgba(40, 44, 55, 0.8);
+    --bg-code: #1a1d24;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --text-main: #ffffff;
+    --text-sub: #9ca3af;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    --success: #10b981;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
   }
+  
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: var(--bg-p);
-    color: var(--tx-p);
+    font-family: var(--font-sans);
+    background-color: var(--bg-body);
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.05), transparent 25%);
+    color: var(--text-main);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     line-height: 1.6;
-    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
   }
+
   .container {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 60px 24px 80px;
+    width: 100%;
+    max-width: 800px;
+    padding: 40px 20px;
+    flex: 1;
   }
-  .header { text-align: center; margin-bottom: 48px; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .logo-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+  
+  .logo-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background: var(--accent);
+    filter: blur(25px);
+    opacity: 0.2;
+    border-radius: 50%;
+    z-index: -1;
+  }
+
   .header img {
-    width: 72px; height: 72px;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px var(--sh);
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
   }
+
   .header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
+    letter-spacing: -0.5px;
     margin-bottom: 8px;
+    background: linear-gradient(to right, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
+
   .header p {
-    color: var(--tx-s);
-    font-size: 15px;
+    color: var(--text-sub);
+    font-size: 16px;
+    max-width: 500px;
+    margin: 0 auto;
   }
+
   .badges {
     display: flex;
     gap: 8px;
     justify-content: center;
-    margin-top: 12px;
+    margin-top: 16px;
     flex-wrap: wrap;
   }
+
   .chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    border: 1px solid var(--bd);
-    color: var(--tx-s);
-    background: transparent;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-sub);
+    transition: all 0.2s;
   }
+  
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--text-main);
+    background: var(--accent-glow);
+  }
+
+  /* Cards */
   .card {
-    background: var(--bg-t);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
     border-radius: 16px;
-    box-shadow: 0 4px 12px var(--sh);
-    padding: 18px 20px;
-    margin-bottom: 20px;
-    overflow: hidden;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: transform 0.2s, border-color 0.2s;
+    animation: slideUp 0.6s ease-out backwards;
   }
+  
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+  .card:nth-child(4) { animation-delay: 0.3s; }
+
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+
   .card-header {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
   }
-  .card-header svg { width: 18px; height: 18px; stroke: var(--tx-s); fill: none; stroke-width: 2; }
-  .cmd-block {
+
+  .card-header svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Code Block */
+  .cmd-wrapper {
     position: relative;
-    background: var(--bg-s);
-    border: 1px solid var(--bd);
-    border-radius: 8px;
-    padding: 14px 52px 14px 16px;
-    font-family: 'Cascadia Code', 'Fira Code', Consolas, Monaco, monospace;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .cmd-label {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+    font-family: var(--font-sans);
+  }
+
+  .cmd-content {
+    padding: 16px;
+    font-family: var(--font-mono);
     font-size: 13px;
+    color: #e2e8f0;
     overflow-x: auto;
     white-space: pre;
-    color: var(--tx-p);
-  }
-  .cmd-block .label {
-    font-family: 'Inter', -apple-system, sans-serif;
-    font-size: 12px;
-    color: var(--tx-t);
-    margin-bottom: 6px;
-    display: block;
-  }
-  .btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all .2s;
+    justify-content: space-between;
+    gap: 12px;
   }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn-primary { background: var(--accent); color: var(--tx-p); }
-  .btn-primary:hover { background: var(--accent-h); }
+  
+  .cmd-text {
+    flex: 1;
+    word-break: break-all;
+  }
+
   .btn-copy {
-    position: absolute;
-    top: 10px; right: 10px;
-    padding: 6px 12px;
-    font-size: 12px;
-    background: var(--bd);
-    color: var(--tx-s);
-    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
     border: none;
+    color: var(--text-main);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
-    font-family: inherit;
-    font-weight: 600;
-    transition: all .2s;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+    white-space: nowrap;
   }
-  .btn-copy:hover { background: var(--accent); color: var(--tx-p); }
-  .btn-copy.copied { background: var(--ok-bg); color: var(--ok-c); }
+
+  .btn-copy:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-copy.copied {
+    background: var(--success);
+    color: white;
+  }
+
+  .hint {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  
+  .hint code {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* Steps */
   .steps {
-    counter-reset: step;
     list-style: none;
-    padding: 0;
+    counter-reset: step-counter;
   }
+
   .steps li {
     position: relative;
-    padding: 10px 0 10px 40px;
-    color: var(--tx-s);
+    padding-left: 36px;
+    margin-bottom: 16px;
+    color: var(--text-sub);
     font-size: 14px;
-    line-height: 1.5;
   }
+  
+  .steps li:last-child { margin-bottom: 0; }
+
   .steps li::before {
-    counter-increment: step;
-    content: counter(step);
+    counter-increment: step-counter;
+    content: counter(step-counter);
     position: absolute;
-    left: 0; top: 10px;
-    width: 26px; height: 26px;
-    background: var(--bg-s);
-    border: 1px solid var(--bd);
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
     font-weight: 600;
-    color: var(--tx-p);
+    color: var(--accent);
   }
+  
   .steps code {
-    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-    font-size: 13px;
-    color: var(--accent-fg);
-    background: var(--bg-s);
-    padding: 2px 6px;
+    font-family: var(--font-mono);
+    color: var(--text-main);
+    background: rgba(255,255,255,0.05);
+    padding: 2px 5px;
     border-radius: 4px;
-  }
-  .hint {
-    color: var(--tx-t);
     font-size: 13px;
-    margin-top: 10px;
   }
-  .hint code { color: var(--link); font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 13px; }
-  .links {
+
+  /* Links */
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .link-item {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .links a {
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: var(--bg-s);
-    border: 1px solid var(--bd);
-    border-radius: 8px;
-    color: var(--tx-p);
+    justify-content: center;
+    padding: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-sub);
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
-    transition: all .2s;
+    transition: all 0.2s;
   }
-  .links a:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .divider {
-    border: none;
-    border-top: 1px solid var(--bd);
-    margin: 28px 0;
+
+  .link-item:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    color: var(--text-main);
+    transform: translateY(-2px);
   }
-  footer {
-    text-align: center;
-    color: var(--tx-t);
-    font-size: 13px;
+
+  /* Footer & Lang Switcher */
+  .footer-area {
     margin-top: 40px;
+    text-align: center;
+    color: var(--text-sub);
+    font-size: 13px;
+    padding-bottom: 20px;
+    animation: fadeIn 1s ease-out;
   }
-  footer a { color: var(--link); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  @media (max-width: 480px) {
-    .container { padding: 40px 16px 60px; }
-    .card { padding: 14px 16px; }
+
+  .footer-area a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .footer-area a:hover { text-decoration: underline; }
+
+  .lang-switch {
+    margin-bottom: 12px;
+    display: inline-flex;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .lang-btn {
+    padding: 6px 16px;
+    font-size: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: white;
+  }
+  
+  .lang-btn:hover:not(.active) {
+    color: var(--text-main);
+    background: rgba(255,255,255,0.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px; }
+    .header h1 { font-size: 24px; }
+    .cmd-content { flex-direction: column; align-items: stretch; gap: 10px; }
+    .btn-copy { width: 100%; text-align: center; }
   }
 </style>
 </head>
 <body>
+
 <div class="container">
   <div class="header">
-    <img src="${baseUrl}/logo.png" alt="ErisPulse" />
+    <div class="logo-wrapper">
+      <img src="${baseUrl}/logo.png" alt="ErisPulse Logo" />
+    </div>
     <h1>ErisPulse</h1>
-    <p>Event-driven multi-platform bot development framework</p>
+    <p>${t.desc}</p>
     <div class="badges">
-      <span class="chip">Docker</span>
-      <span class="chip">amd64 / arm64</span>
-      <span class="chip">1Panel 1.x / 2.0+</span>
+      ${t.badges.map(b => `<span class="chip">${b}</span>`).join('')}
     </div>
   </div>
 
   <div class="card">
     <div class="card-header">
       <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Quick Install
+      ${t.quickInstall}
     </div>
-    <div class="cmd-block">
-      <span class="label">1Panel Scheduled Task / Terminal</span>
-      <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
-bash <(curl -sL ${baseUrl}/install.sh)
+    <div class="cmd-wrapper">
+      <div class="cmd-label">${t.installLabel}</div>
+      <div class="cmd-content">
+        <span class="cmd-text">bash <(curl -sL ${baseUrl}/install.sh)</span>
+        <button class="btn-copy" onclick="copyCmd(this)">${t.copyBtn}</button>
+      </div>
     </div>
-    <p class="hint">Or with wget: <code>bash &lt;(wget -qO- ${baseUrl}/install.sh)</code></p>
+    <p class="hint">${t.orWith} <code>bash &lt;(wget -qO- ${baseUrl}/install.sh)</code></p>
   </div>
 
   <div class="card">
     <div class="card-header">
       <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 14l2 2 4-4"/></svg>
-      Setup Steps
+      ${t.stepsTitle}
     </div>
     <ol class="steps">
-      <li>Copy the install command above</li>
-      <li>Run it via 1Panel Scheduled Task (Shell script), or SSH into your server and execute directly</li>
-      <li>Go to 1Panel App Store, click "Update App List" to refresh local apps</li>
-      <li>Find ErisPulse, click Install and configure the port and Dashboard token</li>
-      <li>Visit <code>http://&lt;IP&gt;:&lt;port&gt;/Dashboard</code> and log in with your token</li>
+      ${t.steps.map(s => `<li>${s}</li>`).join('')}
     </ol>
   </div>
 
   <div class="card">
     <div class="card-header">
       <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      Uninstall
+      ${t.uninstallTitle}
     </div>
-    <div class="cmd-block">
-      <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
-bash <(curl -sL ${baseUrl}/uninstall.sh)
+    <div class="cmd-wrapper">
+      <div class="cmd-content">
+        <span class="cmd-text">bash <(curl -sL ${baseUrl}/uninstall.sh)</span>
+        <button class="btn-copy" onclick="copyCmd(this)">${t.copyBtn}</button>
+      </div>
     </div>
   </div>
-
-  <hr class="divider" />
 
   <div class="card">
     <div class="card-header">
       <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      Links
+      ${t.linksTitle}
     </div>
-    <div class="links">
-      <a href="https://github.com/ErisPulse/ErisPulse" target="_blank">GitHub</a>
-      <a href="https://hub.docker.com/r/erispulse/erispulse" target="_blank">Docker Hub</a>
-      <a href="https://www.erisdev.com" target="_blank">Website</a>
-      <a href="https://github.com/ErisPulse/ErisPulse-1Panel" target="_blank">This Repo</a>
-      <a href="https://1panel.cn" target="_blank">1Panel</a>
+    <div class="links-grid">
+      <a href="https://github.com/ErisPulse/ErisPulse" target="_blank" class="link-item">${t.links.github}</a>
+      <a href="https://hub.docker.com/r/erispulse/erispulse" target="_blank" class="link-item">${t.links.docker}</a>
+      <a href="https://www.erisdev.com" target="_blank" class="link-item">${t.links.website}</a>
+      <a href="https://github.com/ErisPulse/ErisPulse-1Panel" target="_blank" class="link-item">${t.links.repo}</a>
+      <a href="https://1panel.cn" target="_blank" class="link-item">${t.links.panel}</a>
     </div>
   </div>
 
-  <footer>
-    &copy; ErisDev &middot; <a href="https://github.com/ErisPulse/ErisPulse">ErisPulse</a>
-  </footer>
+  <div class="footer-area">
+    <div class="lang-switch">
+      <button class="lang-btn ${isZh ? '' : 'active'}" onclick="switchLang('en')">English</button>
+      <button class="lang-btn ${isZh ? 'active' : ''}" onclick="switchLang('zh')">中文</button>
+    </div>
+    <div>${t.footer}</div>
+  </div>
 </div>
+
 <script>
 function copyCmd(btn) {
-  const block = btn.parentElement;
-  const label = block.querySelector('.label');
-  const text = label
-    ? block.textContent.replace(btn.textContent,'').replace(label.textContent,'').trim()
-    : block.textContent.replace(btn.textContent,'').trim();
+  const wrapper = btn.closest('.cmd-wrapper');
+  const text = wrapper.querySelector('.cmd-text').innerText.trim();
+  
   navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'Copied';
+    const originalText = btn.innerText;
+    // Use current language's "Copied" text based on button's current context or default
+    const isZh = document.documentElement.lang === 'zh';
+    btn.innerText = isZh ? '${I18N.zh.copiedBtn}' : '${I18N.en.copiedBtn}';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    
+    setTimeout(() => { 
+      btn.innerText = originalText; 
+      btn.classList.remove('copied'); 
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
   });
+}
+
+function switchLang(lang) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', lang);
+  window.location.href = url.toString();
 }
 </script>
 </body>
@@ -327,6 +570,8 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
+    
+    // Support manual language override via query param
 
     if (path === "/install.sh") {
       const script = await fetchScript("install.sh");
@@ -363,7 +608,7 @@ export default {
       return new Response("Not Found", { status: 404 });
     }
 
-    return new Response(renderHTML(request), {
+    return new Response(renderHTML(request, url), {
       headers: { "Content-Type": "text/html; charset=utf-8" },
     });
   },
