@@ -48,11 +48,7 @@ bash <(curl -sL https://get-1panel.erisdev.com/uninstall.sh)
 
 ### Update
 
-Re-run the install command to overwrite.
-
-### Auto Version Sync
-
-A GitHub Actions workflow checks PyPI every 6 hours for new ErisPulse versions (including pre-releases) and creates version directories automatically.
+Re-run the install command to overwrite. **Docker only runs the container; framework updates are handled via Dashboard hot-update.**
 
 ### Directory Structure
 
@@ -64,15 +60,14 @@ ErisPulse-1Panel/
 │   ├── install.sh
 │   └── uninstall.sh
 ├── worker/src/index.js             # Worker entry
-├── .github/workflows/
-│   └── sync-pypi-version.yml
 └── apps/erispulse/
     ├── data.yml
     ├── logo.png
     ├── README.md
-    └── latest/
-        ├── docker-compose.yml
-        └── data.yml
+    ├── latest/
+    │   ├── docker-compose.yml
+    │   └── data.yml
+    └── 2.4.5 ~ 2.5.2.dev0/          # Deprecated: removed
 ```
 
 ---
@@ -115,8 +110,4 @@ bash <(curl -sL https://get-1panel.erisdev.com/uninstall.sh)
 
 ### 更新
 
-重新执行安装命令即可覆盖更新。
-
-### 自动版本同步
-
-GitHub Actions 工作流每 6 小时自动检查 [PyPI](https://pypi.org/project/ErisPulse/) 上的新版本（包括预发布版本），并自动创建对应的版本目录。
+重新执行安装命令即可覆盖更新。**Docker 仅负责运行容器，框架更新请通过 Dashboard 热更新完成。**
