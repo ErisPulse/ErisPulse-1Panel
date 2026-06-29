@@ -1,7 +1,6 @@
 # ErisPulse
 
 ## 产品介绍
-事件驱动的多平台机器人开发框架。
 ErisPulse 是一个事件驱动的多平台机器人开发框架，内置 Dashboard，可用于集中管理适配器、插件和运行状态。
 
 ## 主要功能
@@ -23,11 +22,9 @@ ErisPulse is an event-driven multi-platform bot framework with a built-in Dashbo
 - Persist the configuration directory and Python packages volume across container rebuilds
 
 ## 部署说明
-- 本应用使用 Docker Compose 在 1Panel 中部署。
+- 本应用使用镜像 `erispulse/erispulse:latest`。
 - 应用分类：Tool。
 - 支持架构：amd64、arm64。
-- 可选版本：`latest`。
-- 框架更新应在 Dashboard 内完成，容器启动时不再自动切换 stable/dev 频道。
 
 ## 端口
 | 变量 | 说明 | 默认值 | 必填 |
@@ -50,7 +47,10 @@ ErisPulse is an event-driven multi-platform bot framework with a built-in Dashbo
 | CONTAINER_NAME | 容器名称和 packages 卷名前缀 | erispulse | 是 |
 
 ## 使用说明
-- 安装时设置的 Dashboard 令牌即为登录密码，首次访问需使用该令牌登录。
+- 安装完成后，浏览器访问 `http://<IP>:<端口>/Dashboard`。
+- 使用安装时设置的 Dashboard 令牌登录。
+- 在 Dashboard 中配置适配器、插件和框架更新。
+- 数据路径下的配置文件会在首次启动时自动生成。
 - `packages` 命名卷会绑定容器名称，用于持久化 Dashboard 热更新安装的 Python 包。
 - 当前上游 Dashboard 模块会在容器启动日志中打印 Dashboard 访问令牌。请将容器日志视为敏感信息，分享日志前先脱敏，并在令牌泄露后及时修改 `DATA_PATH/config.toml` 中的 `Dashboard.token`。
 - 本次维护审计中，Trivy 对 `erispulse/erispulse:latest` 的 Debian 基础层报告了若干 High/Critical CVE，主要涉及 perl、ncurses、sqlite 等系统包且暂无 fixed version。建议保持镜像更新，并按需限制 Dashboard 的公网暴露范围。

@@ -9,6 +9,9 @@ additionalProperties:
         en: "Port"
         ja: "ポート"
         ko: "포트"
+        ru: "Порт"
+        ms: "Port"
+        pt-br: "Porta"
       description:
         zh: "设置应用的 HTTP 访问端口，有效范围：1-65535"
         zh-Hant: "設定應用程式的 HTTP 存取埠，有效範圍：1-65535"
@@ -30,6 +33,9 @@ additionalProperties:
         en: "Data Path"
         ja: "データパス"
         ko: "데이터 경로"
+        ru: "Путь к данным"
+        ms: "Laluan Data"
+        pt-br: "Caminho dos dados"
       description:
         zh: "配置文件的存储路径，用于持久化应用数据"
         zh-Hant: "配置檔案的儲存路徑，用於持久化應用程式資料"
@@ -50,6 +56,9 @@ additionalProperties:
         en: "Timezone"
         ja: "タイムゾーン"
         ko: "시간대"
+        ru: "Часовой пояс"
+        ms: "Zon waktu"
+        pt-br: "Fuso horário"
       description:
         zh: "容器时区设置，影响日志和时间显示"
         zh-Hant: "容器時區設定，影響日誌和時間顯示"
@@ -70,6 +79,9 @@ additionalProperties:
         en: "Dashboard Login Token"
         ja: "ダッシュボードログイントークン"
         ko: "대시보드 로그인 토큰"
+        ru: "Токен панели"
+        ms: "Token Dashboard"
+        pt-br: "Token do Dashboard"
       description:
         zh: "Dashboard 登录密码，安装后用于访问 Web 管理面板"
         zh-Hant: "Dashboard 登入密碼，安裝後用於存取 Web 管理面板"
@@ -92,6 +104,9 @@ additionalProperties:
         en: "Language"
         ja: "インターフェース言語"
         ko: "인터페이스 언어"
+        ru: "Язык интерфейса"
+        ms: "Bahasa antara muka"
+        pt-br: "Idioma da interface"
       description:
         zh: "Docker 启动界面及日志的显示语言，选择自动则由系统 LANG 环境变量决定。框架更新请在 Dashboard 内完成"
         zh-Hant: "Docker 啟動界面及日誌的顯示語言，選擇自動則由系統 LANG 環境變數決定。框架更新請在 Dashboard 內完成"
