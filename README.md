@@ -1,19 +1,17 @@
+[English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [日本語](README.ja.md) | [Русский](README.ru.md)
+
 <div align="center">
 
-<img src=".github/assets/ErisPulseLogo.png" width="240" alt="ErisPulse" />
+<img src="https://raw.githubusercontent.com/ErisPulse/ErisPulse/main/.github/assets/ErisPulseLogo.png" width="180" alt="ErisPulse-1Panel" />
 
-# ErisPulse 1Panel App Store
+# ErisPulse-1Panel
 
-**通过 1Panel 应用商店安装 ErisPulse · Install ErisPulse via the 1Panel app store**
-
-<img src=".github/1panel_image.png" alt="ErisPulse 在 1Panel 应用商店中的详情页" width="640" />
+**One-click install of ErisPulse via the 1Panel app store**
 
 <p>
-  <a href="https://get-1panel.erisdev.com"><img src="https://img.shields.io/badge/安装指引-get--1panel.erisdev.com-4aa3dd?style=for-the-badge" alt="安装指引"></a>
-  <a href="https://github.com/ErisPulse/ErisPulse"><img src="https://img.shields.io/badge/框架仓库-ErisPulse-4aa3dd?style=for-the-badge&logo=github" alt="ErisPulse"></a>
+  <a href="https://github.com/ErisPulse/ErisPulse/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/ErisPulse/.github/main/assets/badges/ecosystem.svg" alt="ErisPulse">
 </p>
-
-[English](#english) | [简体中文](#简体中文)
 
 </div>
 
