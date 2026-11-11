@@ -1,0 +1,10 @@
+name = "erispulse-1panel"
+main = "worker/src/index.js"
+compatibility_date = "2026-05-06"
+
+routes = [
+  { pattern = "get-1panel.erisdev.com", custom_domain = true }
+]
+
+[observability]
+enabled = true
